@@ -1,0 +1,27 @@
+body{
+    text-align: center;
+    height: 100%;
+}
+
+div.table{
+    text-align: center;
+}
+
+table, th, td{
+    border-collapse: collapse;
+    border: 1px solid rgb(184, 83, 83);
+}
+
+div.form-wrapper{
+    text-align: center;
+}
+
+th{
+    background-color: rgb(184, 83, 83);
+    color: white;
+}
+
+th, td {
+    padding: 0 15px 0 15px;
+    text-align: center;
+}
