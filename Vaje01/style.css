@@ -1,10 +1,29 @@
+*{
+    font-family: Arial, Helvetica, sans-serif;
+}
+
 body{
     text-align: center;
     height: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+.header{
+    text-align: center;
+    vertical-align: middle;
+    background-color: #63a55d;
+    padding: 0.5em 0 0 0.5em;
 }
 
 div.table{
     text-align: center;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    background-color: #b8fbb2;
+    padding: 1em 0 1em 0;
+    margin: 0;
 }
 
 table, th, td{
@@ -13,7 +32,13 @@ table, th, td{
 }
 
 div.form-wrapper{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
     text-align: center;
+    padding-top: 1em;
+    padding-bottom: 1em;
+    background-color: #abda8e;
 }
 
 th{
@@ -24,4 +49,9 @@ th{
 th, td {
     padding: 0 15px 0 15px;
     text-align: center;
+}
+
+footer{
+    background-color: aqua;
+    padding: 0.5em 0 0.5em 0;
 }

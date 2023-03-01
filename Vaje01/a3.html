@@ -11,61 +11,63 @@
 
 <body>
     <div class="header">
-        <h1>Web Technologies</h1>
+        <h1 style="line-height: 1em; padding: 0.7em 0 0.7em 0; margin: 0;">Web Technologies</h1>
     </div>
-
-    <div class="table" style="width: fit-content;">
-        The list of class participants.
-        <table>
-            <tr>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Role</th>
-            </tr>
-            <tr>
-                <td>Aleš</td>
-                <td>Smrdel</td>
-                <td>Lecturer</td>
-            </tr>
-            <tr>
-                <td>David</td>
-                <td>Jelenc</td>
-                <td>Teaching assistant</td>
-            </tr>
-            <tr>
-                <td>Vanja</td>
-                <td>Stojanović</td>
-                <td>Student</td>
-            </tr>
-        </table>
+    <div class="table">
+        The list of class participants
+        <div style="margin-top: 2px;">
+            <table>
+                <tr>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Role</th>
+                </tr>
+                <tr>
+                    <td>Aleš</td>
+                    <td>Smrdel</td>
+                    <td>Lecturer</td>
+                </tr>
+                <tr>
+                    <td>David</td>
+                    <td>Jelenc</td>
+                    <td>Teaching assistant</td>
+                </tr>
+                <tr>
+                    <td>Vanja</td>
+                    <td>Stojanović</td>
+                    <td>Student</td>
+                </tr>
+            </table>
+        </div>
     </div>
-
     <div class="form-wrapper">
-        <form>
-            <fieldset>
-                <legend>Add a new participant</legend> 
-                <div style="display: flex; flex-direction: row;">
-                    <div style="padding-right: 1em;">
-                        <label for="first-name">First name:</label> <br>
-                        <label for="last-name">Last name:</label> <br>
-                        <label for="role">Role:</label> <br>
+        <div>
+            <form>
+                <fieldset style="border-collapse: collapse; border: 1px solid black;">
+                    <legend>Add a new participant</legend> 
+                    <div style="display: flex; flex-direction: row;">
+                        <div style="padding-right: 1em;">
+                            <label for="first-name">First name:</label> <br>
+                            <label for="last-name">Last name:</label> <br>
+                            <label for="role">Role:</label> <br>
+                        </div>
+                        <div>
+                            <input type="text" id="first-name" name="first-name"> <br>
+                            <input type="text" id="last-name" name="last-name"> <br>
+                            <select id="role" name="role"> <br>
+                                <option value="manager">Lecturer</option>
+                                <option value="employee">Teaching assistant</option>
+                                <option value="intern">Student</option>
+                            </select>
+                        </div>
                     </div>
-                    <div>
-                        <input type="text" id="first-name" name="first-name"> <br>
-                        <input type="text" id="last-name" name="last-name"> <br>
-                        <select id="role" name="role"> <br>
-                            <option value="manager">Lecturer</option>
-                            <option value="employee">Teaching assistant</option>
-                            <option value="intern">Student</option>
-                        </select>
+                    <div style="text-align: center;">
+                        <button type="button">Clear</button>
+                        <input type="submit" value="Submit">
                     </div>
-                </div>
-                <div style="text-align: center;">
-                    <button type="button">Clear</button>
-                    <input type="submit" value="Submit">
-                </div>
-            </fieldset>
-        </form>
+                </fieldset>
+            </form>
+        </div>
     </div>
 </body>
 
