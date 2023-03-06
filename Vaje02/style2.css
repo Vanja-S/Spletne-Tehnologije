@@ -24,19 +24,20 @@ header h1 {
 }
 
 
-.content-flexbox {
-    display: flex;
-    flex-direction: column;
+.content-grid {
+    display: grid;
     row-gap: 2em;
 }
 
+
 nav {
     margin-top: 0.7em;
-    display: flex;
-    flex-direction: column;
+    display: grid;
     row-gap: 0.5em;
-    align-items: center;
     width: 100%;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
 }
 
 nav button {
@@ -89,6 +90,7 @@ footer {
 @media screen and (min-width: 600px) {
     nav {
         width: 30vw;
+        height: fit-content;
     }
 
     nav button {
@@ -96,7 +98,7 @@ footer {
         margin-left: 3vw;
     }
 
-    .content-flexbox {
+    .content-grid {
         display: flex;
         flex-direction: row;
         column-gap: 2em;
