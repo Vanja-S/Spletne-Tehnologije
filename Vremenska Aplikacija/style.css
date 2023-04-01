@@ -1,0 +1,165 @@
+/* Style imports */
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500&display=swap');
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Baloo 2', cursive;
+    color: white;
+    overflow-y: hidden;
+}
+
+body {
+    height: 100vh;
+    background: rgb(37, 190, 238);
+    background: -moz-linear-gradient(167deg, rgba(37, 190, 238, 0.22) 0%, rgba(33, 172, 216, 1) 47%);
+    background: -webkit-linear-gradient(167deg, rgba(37, 190, 238, 0.22) 0%, rgba(33, 172, 216, 1) 47%);
+    background: linear-gradient(167deg, rgba(37, 190, 238, 0.22) 0%, rgba(33, 172, 216, 1) 47%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#25beee", endColorstr="#21acd8", GradientType=1);
+}
+
+nav {
+    margin-top: 10vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+nav .searchbar input {
+    margin: 1vh 1vh 1vh 1vh;
+    border-radius: 20px;
+    border: none;
+    border-collapse: collapse;
+    height: 30px;
+    padding: 2px 1em 2px 1em;
+    color: black;
+}
+
+nav .hamburger {
+    right: 10vw;
+    position: absolute;
+    display: flex;
+
+    display: inline-block;
+    cursor: pointer;
+}
+
+nav .hamburger .n1,
+nav .hamburger .n2,
+nav .hamburger .n3 {
+    width: 35px;
+    height: 5px;
+    background-color: #ffffff;
+    margin: 6px 0;
+    transition: 0.4s;
+}
+
+.change .n1 {
+    transform: translate(0, 11px) rotate(-45deg);
+}
+
+.change .n2 {
+    opacity: 0;
+}
+
+.change .n3 {
+    transform: translate(0, -11px) rotate(45deg);
+}
+
+.weatherdisplay {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    height: 70vh;
+}
+
+.weatherdisplay .location {
+    height: 10vh;
+    font-size: 3vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+}
+
+.weatherdisplay .temperature {
+    font-size: 3vh;
+}
+
+.heart-like-button {
+    margin-left: 3vh;
+    position: relative;
+    width: 40px;
+    height: 36px;
+}
+
+.heart-like-button:before {
+    position: absolute;
+    top: 0;
+    left: 16.5px;
+    transform: rotate(-45deg);
+    transform-origin: 0 100%;
+    width: 15px;
+    height: 25px;
+    border-radius: 40px 40px 0 0;
+    background-color: #fafafa00;
+    border-color: white;
+    border: 1.5px solid;
+    border-right: none;
+    content: "";
+    cursor: pointer;
+    transition: background .4s;
+}
+
+.heart-like-button:after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: rotate(45deg);
+    transform-origin: 100% 100%;
+    width: 15px;
+    height: 25px;
+    border-radius: 40px 40px 0 0;
+    background-color: #fafafa00;
+    border-color: white;
+    border: 1.5px solid;
+    border-left: none;
+    content: "";
+    cursor: pointer;
+    transition: background .4s;
+}
+
+.heart-like-button.liked::before,
+.heart-like-button.liked::after {
+    background-color: #ffffff;
+}
+
+.heart-like-button.liked {
+    animation: liked .4s ease;
+}
+
+@keyframes liked {
+    0% {
+        transform: scale(.8);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+footer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    height: 15vh;
+    padding-bottom: 4vh;
+}
