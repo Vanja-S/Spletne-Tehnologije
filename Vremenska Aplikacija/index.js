@@ -12,10 +12,46 @@ function initLikeButton() {
     button.addEventListener("click", () => {
         if (button.classList.contains("liked")) {
             button.classList.remove("liked");
+            removeFromFavorites(document.querySelector(".location"));
         } else {
             button.classList.add("liked");
+            addToFavorites(document.querySelector(".location"));
         }
     });
+}
+
+function addToFavorites(location) {
+    const cityName = location.textContent;
+
+    if (localStorage.getItem(cityName) !== null) {
+        alert('This city is already added to favorites!');
+        return;
+    }
+    localStorage.setItem(cityName, true);
+
+    const newDiv = document.createElement('div');
+    newDiv.classList.add('favorite-city');
+
+    const h2 = document.createElement('h2');
+    h2.textContent = cityName;
+    const h3 = document.createElement('h3');
+    h3.textContent = 'Population: 1000000';
+
+    newDiv.appendChild(h2);
+    newDiv.appendChild(h3);
+
+    const sidebar = document.querySelector('.sidebar');
+    sidebar.appendChild(newDiv);
+}
+
+function removeFromFavorites(location) {
+    const cityName = location.textContent;
+
+    localStorage.removeItem(cityName);
+
+    const sidebar = document.querySelector('.sidebar');
+    const divToRemove = sidebar.querySelector(`h2:contains(${cityName})`).parentNode;
+    sidebar.removeChild(divToRemove);
 }
 
 function sanitizeInput(input) {
@@ -106,6 +142,13 @@ const europeCapitals = {
     "Zagreb": { lat: 45.8150, lng: 15.9819 }
 };
 
+let closed = false;
 function activateMenu(menu) {
-    menu.classList.toggle("change")
+    menu.classList.toggle("change");
+    let sidebar = document.querySelector(".sidebar");
+    sidebar.classList.toggle("active");
+    if (closed)
+        sidebar.classList.toggle("closed");
+    else
+        closed = !closed;
 }

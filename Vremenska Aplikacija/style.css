@@ -44,6 +44,7 @@ nav .hamburger {
 
     display: inline-block;
     cursor: pointer;
+    z-index: 4;
 }
 
 nav .hamburger .n1,
@@ -66,6 +67,60 @@ nav .hamburger .n3 {
 
 .change .n3 {
     transform: translate(0, -11px) rotate(45deg);
+}
+
+.sidebar {
+    width: 0vw;
+    height: 100vh;
+    position: absolute;
+    right: 0;
+    top: 0;
+    background: rgb(37, 190, 238);
+    background: -moz-linear-gradient(167deg, rgba(37, 190, 238, 0.22) 0%, rgba(33, 133, 216, 1) 29%);
+    background: -webkit-linear-gradient(167deg, rgba(37, 190, 238, 0.22) 0%, rgba(33, 133, 216, 1) 29%);
+    background: linear-gradient(167deg, rgba(37, 190, 238, 0.22) 0%, rgba(33, 133, 216, 1) 29%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#25beee", endColorstr="#2185d8", GradientType=1);
+    z-index: 3;
+    transition: background .4s;
+    animation: sidebarmenu-close .4s ease-in-out;
+    white-space: nowrap;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    flex-direction: column;
+}
+
+.sidebar.closed {
+    width: 0vw;
+    animation: sidebarmenu-close .4s ease-in-out;
+}
+
+.sidebar.active {
+    width: 80vw;
+    animation: sidebarmenu-open .4s ease-in-out;
+}
+
+@keyframes sidebarmenu-open {
+    0% {
+        translate: 80vw;
+    }
+    100% {
+        translate: 0vw;
+    }
+}
+
+@keyframes sidebarmenu-close {
+    0% {
+        width: 80vw;
+    }
+    100% {
+        width: 0vw;
+    }
+}
+
+.sidebar h1 {
+    display: inherit;
+    position: inherit;
 }
 
 .weatherdisplay {
