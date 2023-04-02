@@ -12,7 +12,7 @@ function initLikeButton() {
     button.addEventListener("click", () => {
         if (button.classList.contains("liked")) {
             button.classList.remove("liked");
-            removeFromFavorites(document.querySelector(".location"));
+            removeFromFavorites(document.querySelector(".location_text"));
         } else {
             button.classList.add("liked");
             addToFavorites(document.querySelector(".location"));
@@ -21,38 +21,62 @@ function initLikeButton() {
 }
 
 function addToFavorites(location) {
-    const cityName = location.textContent;
-
-    if (localStorage.getItem(cityName) !== null) {
-        alert('This city is already added to favorites!');
-        return;
+    const city = location.textContent.trim();
+    const favorites = getFavorites();
+    if (!favorites.some(fav => fav.city === city)) {
+        favorites.push({ city: city });
+        saveFavorites(favorites);
+        displayFavorites();
     }
-    localStorage.setItem(cityName, true);
-
-    const newDiv = document.createElement('div');
-    newDiv.classList.add('favorite-city');
-
-    const h2 = document.createElement('h2');
-    h2.textContent = cityName;
-    const h3 = document.createElement('h3');
-    h3.textContent = 'Population: 1000000';
-
-    newDiv.appendChild(h2);
-    newDiv.appendChild(h3);
-
-    const sidebar = document.querySelector('.sidebar');
-    sidebar.appendChild(newDiv);
 }
 
 function removeFromFavorites(location) {
-    const cityName = location.textContent;
-
-    localStorage.removeItem(cityName);
-
-    const sidebar = document.querySelector('.sidebar');
-    const divToRemove = sidebar.querySelector(`h2:contains(${cityName})`).parentNode;
-    sidebar.removeChild(divToRemove);
+    const city = location.textContent.trim();
+    let favorites = getFavorites();
+    const index = favorites.findIndex(fav => fav.city === city);
+    if (index >= 0) {
+        favorites.splice(index, 1);
+        saveFavorites(favorites);
+        displayFavorites();
+    }
 }
+
+function getFavorites() {
+    return JSON.parse(localStorage.getItem('favorites')) || [];
+}
+
+function saveFavorites(favorites) {
+    localStorage.setItem('favorites', JSON.stringify(favorites));
+}
+
+function displayFavorites() {
+    const container = document.querySelector('.sidebar');
+    container.innerHTML = '';
+    const favorites = getFavorites();
+    favorites.forEach(fav => {
+        const div = document.createElement('div');
+        div.classList.add('favorite');
+        const h2 = document.createElement('h2');
+        h2.textContent = fav.city;
+        const h3 = document.createElement('h3');
+
+        let coords = europeCapitals[fav.city];
+        const api = `https://api.open-meteo.com/v1/forecast?latitude=${coords.lat}&longitude=${coords.lng}&hourly=temperature_2m&forecast_days=1`;
+
+        fetch(api)
+            .then(response => {
+                return response.json();
+            })
+            .then(data => {
+                h3.innerHTML = data.hourly.temperature_2m[new Date().getHours()] + "°C";
+            });
+
+        div.appendChild(h2);
+        div.appendChild(h3);
+        container.appendChild(div);
+    });
+}
+
 
 function sanitizeInput(input) {
     const replacements = {
@@ -81,7 +105,7 @@ function makeAPICall(inputCity) {
     let coords = europeCapitals[inputCity];
 
     const city = document.querySelector("h1");
-    const temp = document.querySelector("h2");
+    const temp = document.querySelector(".temp_text");
     // Make the API call to get the weather for current day
     const api = `https://api.open-meteo.com/v1/forecast?latitude=${coords.lat}&longitude=${coords.lng}&hourly=temperature_2m&forecast_days=1`;
 
