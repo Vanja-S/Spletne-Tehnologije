@@ -1,101 +1,169 @@
 """An example of a simple HTTP server."""
+import json
 import mimetypes
+import pickle
 import socket
+from os import listdir
+from os.path import isdir, isfile, join
+from urllib.parse import unquote_plus
 
-# Port number
-PORT = 8080
+# Pickle file for storing data
+PICKLE_DB = "db.pkl"
+
+# Directory containing www data
+WWW_DATA = "www-data"
 
 # Header template for a successful HTTP request
-# Return this header (+ content) when the request can be
-# successfully fulfilled
 HEADER_RESPONSE_200 = """HTTP/1.1 200 OK\r
-Content-Type: %s\r
-Content-Length: %d\r
-Connection: Close\r
+content-type: %s\r
+content-length: %d\r
+connection: Close\r
 \r
 """
 
-# Template for a 404 (Not found) error: return this when
-# the requested resource is not found
+# Represents a table row that holds user data
+TABLE_ROW = """
+<tr>
+    <td>%d</td>
+    <td>%s</td>
+    <td>%s</td>
+</tr>
+"""
+
+# Template for a 404 (Not found) error
 RESPONSE_404 = """HTTP/1.1 404 Not found\r
-Content-Type: text/html; charset=utf-8\r
-Connection: Close\r
+content-type: text/html\r
+connection: Close\r
 \r
-<!DOCTYPE html>
+<!doctype html>
 <h1>404 Page not found</h1>
 <p>Page cannot be found.</p>
 """
 
+DIRECTORY_LISTING = """<!DOCTYPE html>
+<html lang="en">
+<meta charset="UTF-8">
+<title>Directory listing: %s</title>
 
-def process_request(connection, address, port):
-    """
-    Process an incoming socket request.
+<h1>Contents of %s:</h1>
 
-    :param connection: the socket object used to send and receive data
-    :param address: the address (IP) of the remote socket
-    :param port: the port number of the remote socket
-    """
+<ul>
+{{CONTENTS}}
+</ul> 
+"""
 
-    # Make reading from a socket like reading/writing from a file
-    # Use binary mode, so we can read and write binary data. However,
-    # this also means that we have to decode (and encode) data (preferably
-    # to utf-8) when reading (and writing) text
-    client = connection.makefile("wrb")
+FILE_TEMPLATE = "  <li><a href='%s'>%s</li>"
 
-    # Read one line, decode it to utf-8 and strip leading and trailing spaces
-    line = client.readline().decode("utf-8").strip()
-    requested_file = line.split(" ")[1][1:];
 
-    print(mimetypes.guess_type(requested_file))
-    if mimetypes.guess_type(requested_file)[0].split("/")[0] == "text":
-        response = parse_file(requested_file, 'r')
-        client.write(response.encode("utf-8"))
+def save_to_db(first, last):
+    """Create a new user with given first and last name and store it into
+    file-based database.
+
+    For instance, save_to_db("Mick", "Jagger"), will create a new user
+    "Mick Jagger" and also assign him a unique number.
+
+    Do not modify this method."""
+
+    existing = read_from_db()
+    existing.append({
+        "number": 1 if len(existing) == 0 else existing[-1]["number"] + 1,
+        "first": first,
+        "last": last
+    })
+    with open(PICKLE_DB, "wb") as handle:
+        pickle.dump(existing, handle)
+
+
+def read_from_db(criteria=None):
+    """Read entries from the file-based DB subject to provided criteria
+
+    Use this method to get users from the DB. The criteria parameters should
+    either be omitted (returns all users) or be a dict that represents a query
+    filter. For instance:
+    - read_from_db({"number": 1}) will return a list of users with number 1
+    - read_from_db({"first": "bob"}) will return a list of users whose first
+    name is "bob".
+
+    Do not modify this method."""
+    if criteria is None:
+        criteria = {}
     else:
-        with open(requested_file, 'rb') as file:
-            content = file.read()
-            response = (bytes(HEADER_RESPONSE_200 % (mimetypes.guess_type(file.name), len(content)), 'utf-8') + content)
+        # remove empty criteria values
+        for key in ("number", "first", "last"):
+            if key in criteria and criteria[key] == "":
+                del criteria[key]
 
-        client.write(response)
+        # cast number to int
+        if "number" in criteria:
+            criteria["number"] = int(criteria["number"])
 
-    # Closes file-like object
-    client.close()
+    try:
+        with open(PICKLE_DB, "rb") as handle:
+            data = pickle.load(handle)
 
-def parse_file(requested_file: str, mode: str):
-    with open(requested_file, mode) as file:
-            content = file.read()
-            response = ((HEADER_RESPONSE_200 % (mimetypes.guess_type(file.name), len(content))) + content) if mode == "r"  else ((HEADER_RESPONSE_200 % (mimetypes.guess_type(file.name), file.__sizeof__)) + content)
-    return response
+        filtered = []
+        for entry in data:
+            predicate = True
 
-def main():
+            for key, val in criteria.items():
+                if val != entry[key]:
+                    predicate = False
+
+            if predicate:
+                filtered.append(entry)
+
+        return filtered
+    except (IOError, EOFError):
+        return []
+
+
+def process_request(connection, address):
+    """Process an incoming socket request.
+
+    :param connection is a socket of the client
+    :param address is a 2-tuple (address(str), port(int)) of the client
+    """
+
+    # Read and parse the request line
+    parse_request_line()
+    # Read and parse headers
+    parse_headers()
+    # Read and parse the body of the request (if applicable)
+    parse_body()
+    # create the response
+
+    # Write the response back to the socket
+
+
+def parse_request_line():
+    return
+
+
+def parse_headers():
+    return
+
+
+def parse_body():
+    return
+
+
+def main(port):
     """Starts the server and waits for connections."""
 
-    # Create a TCP socket
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-    # To prevent "Address already in use" error while restarting the server,
-    # set the reuse address socket option
     server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-
-    # Bind on all network addresses (interfaces)
-    server.bind(("127.0.0.1", PORT))
-
-    # Start listening and allow at most 1 queued connection
+    server.bind(("", port))
     server.listen(1)
 
-    print("Listening on %d" % PORT)
+    print("Listening on %d" % port)
 
     while True:
-        # Accept the connection
-        connection, (address, port) = server.accept()
-        print("[%s:%d] CONNECTED" % (address, port))
-
-        # Process request
-        process_request(connection, address, port)
-
-        # Close the socket
+        connection, address = server.accept()
+        print("[%s:%d] CONNECTED" % address)
+        process_request(connection, address)
         connection.close()
-        print("[%s:%d] DISCONNECTED" % (address, port))
+        print("[%s:%d] DISCONNECTED" % address)
 
 
 if __name__ == "__main__":
-    main()
+    main(8080)
