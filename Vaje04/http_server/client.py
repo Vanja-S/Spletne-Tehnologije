@@ -1,4 +1,5 @@
 from urllib.request import urlopen
+import requests
 
 
 def get(url, port, resource):

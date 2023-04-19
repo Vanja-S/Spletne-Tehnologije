@@ -1,4 +1,3 @@
-"""An example of a simple HTTP server."""
 import json
 import mimetypes
 import pickle
@@ -13,13 +12,6 @@ PICKLE_DB = "db.pkl"
 # Directory containing www data
 WWW_DATA = "www-data"
 
-# Header template for a successful HTTP request
-HEADER_RESPONSE_200 = """HTTP/1.1 200 OK\r
-content-type: %s\r
-content-length: %d\r
-connection: Close\r
-\r
-"""
 
 # Represents a table row that holds user data
 TABLE_ROW = """
@@ -30,15 +22,6 @@ TABLE_ROW = """
 </tr>
 """
 
-# Template for a 404 (Not found) error
-RESPONSE_404 = """HTTP/1.1 404 Not found\r
-content-type: text/html\r
-connection: Close\r
-\r
-<!doctype html>
-<h1>404 Page not found</h1>
-<p>Page cannot be found.</p>
-"""
 
 DIRECTORY_LISTING = """<!DOCTYPE html>
 <html lang="en">
@@ -53,6 +36,76 @@ DIRECTORY_LISTING = """<!DOCTYPE html>
 """
 
 FILE_TEMPLATE = "  <li><a href='%s'>%s</li>"
+
+# Class for storing http response headers
+class HttpResponses:
+    # Template for a 404 (Not found) error
+    RESPONSE_404 = """HTTP/1.1 404 Not found\r
+    Content-Type: text/html; charset=utf-8\r
+    Content-Length: 80
+    Connection: Close\r
+\r
+<!doctype html>
+<h1>404 Page not found</h1>
+<p>Page cannot be found.</p>"""
+    
+    # Header template for a successful HTTP request
+    RESPONSE_200 = """HTTP/1.1 200 OK\r
+    Content-Type: %s\r
+    Content-Length: %d\r
+    Connection: Close\r
+    \r
+    """
+    
+    # Header for Method Not Allowed 405
+    RESPONSE_405 = """HTTP/1.1 405 Method Not Allowed\r
+    Content-Type: text/html; charset=utf-8\r
+    Content-Length: 176\r
+    Connection: Close\r
+\r
+<!doctype html>
+<html>
+    <body>
+        <h1>405 Method Not Allowed</h1>
+        <p>The requested method could not be executed.</p>
+    </body>
+</html>"""
+
+    RESPONSE_301 = """HTTP/1.1 301 Moved Permanently\r
+    Content-Type: text/html; charset=utf-8\r
+    Content-Length: \r
+    Connection: keep-alive\r
+    Location: %s\r
+\r
+<!doctype html>
+<html>
+    <body>
+        <h1>301 Moved Permanently</h1>
+        <a href="%s">%s</p>
+    </body>
+</html> 
+    """
+
+
+# Class for storing info about a url once it's parsed
+class ParseResult:
+    def __init__(self, scheme, userinfo, host, port, path, query, fragment):
+        self.scheme = scheme
+        self.userinfo = userinfo
+        self.host = host
+        self.port = port
+        self.path = path
+        self.query = query
+        self.fragment = fragment
+    
+    def geturl(self):
+        netloc = self.host
+        if self.userinfo:
+            netloc = f"{self.userinfo}@{netloc}"
+        if self.port:
+            netloc = f"{netloc}:{self.port}"
+        return f"{self.scheme}://{netloc}{self.path}{self.query}{self.fragment}"
+
 
 
 def save_to_db(first, last):
@@ -123,28 +176,86 @@ def process_request(connection, address):
     :param connection is a socket of the client
     :param address is a 2-tuple (address(str), port(int)) of the client
     """
+    client = connection.makefile("wrb") 
 
     # Read and parse the request line
-    parse_request_line()
+    request = parse_request_line(client)
+    url_object = url_parse(unquote_plus(request[1]))
     # Read and parse headers
-    parse_headers()
+    parse_headers(client)
     # Read and parse the body of the request (if applicable)
-    parse_body()
+    body = parse_body()
     # create the response
+    response = create_response(request[0], url_object.path, body)
 
     # Write the response back to the socket
+    client.write(response)
+    client.close()
+
+def url_parse(url):
+    parts = url.split('://')
+    if len(parts) > 1:
+        scheme, rest = parts
+    else:
+        scheme, rest = '', parts[0]
+    parts = rest.split('/', 1)
+    if len(parts) > 1:
+        netloc, path = parts
+        if '/' in path:
+            path, query = path.split('?', 1)
+        else:
+            query = ''
+    else:
+        netloc, path, query = parts[0], '', ''
+    if '@' in netloc:
+        userinfo, netloc = netloc.split('@', 1)
+    else:
+        userinfo = ''
+    if ':' in netloc:
+        host, port = netloc.split(':', 1)
+    else:
+        host, port = netloc, ''
+    return ParseResult(scheme, userinfo, host, port, path, query, '')
 
 
-def parse_request_line():
-    return
+def create_GET_response(uri_path):
+    try:
+        with open(uri_path):
+            pass
+    except FileNotFoundError:
+        return HttpResponses.RESPONSE_404.encode("utf-8")
+
+def create_response(method: str, uri_path, body = None):
+    if method == "GET":
+        return create_GET_response(uri_path)
+    else:
+        return
+
+
+SUPPORTED_METHODS = {
+    "GET",
+    "POST"
+}
+
+
+def parse_request_line(client):
+    request_line = client.readline().decode("utf-8").strip()
+
+    if(not SUPPORTED_METHODS.__contains__(request_line.split()[0])):
+        client.write(HttpResponses.RESPONSE_405.encode("utf-8"))
+        client.close()
+        return
+        
+    return (request_line.split()[0], request_line.split()[1])
 
 
 def parse_headers():
+
     return
 
 
 def parse_body():
-    return
+    return None
 
 
 def main(port):
