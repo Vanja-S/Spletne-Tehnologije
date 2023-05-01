@@ -44,16 +44,16 @@ def process_request(connection, address, port):
 
     # Read one line, decode it to utf-8 and strip leading and trailing spaces
     line = client.readline().decode("utf-8").strip()
-    requested_file = line.split(" ")[1][1:];
+    requested_file = line.split(" ")[1][1:]
 
-    print(mimetypes.guess_type(requested_file))
+    print(mimetypes.guess_type(requested_file)[0])
     if mimetypes.guess_type(requested_file)[0].split("/")[0] == "text":
         response = parse_file(requested_file, 'r')
         client.write(response.encode("utf-8"))
     else:
         with open(requested_file, 'rb') as file:
             content = file.read()
-            response = (bytes(HEADER_RESPONSE_200 % (mimetypes.guess_type(file.name), len(content)), 'utf-8') + content)
+            response = (bytes(HEADER_RESPONSE_200 % (mimetypes.guess_type(file.name)[0], len(content)), 'utf-8') + content)
 
         client.write(response)
 
