@@ -10,6 +10,17 @@ class ViewController
         ViewHelper::render("view/landing-page.php");
     }
 
+    public static function loginPage()
+    {
+        ViewHelper::render("view/login-page.php");
+    }
+
+    public static function signupPage()
+    {
+        ViewHelper::render("view/signup-page.php");
+    }
+
+
     public static function search()
     {
         if (isset($_GET["query"])) {
@@ -72,7 +83,8 @@ class ViewController
                 // If the data is not OK, we return false, otherwise we return the data
                 "filter" => FILTER_CALLBACK,
                 "options" => function ($value) {
-                    return (is_numeric($value) && $value >= 0) ? floatval($value) : false; }
+                    return (is_numeric($value) && $value >= 0) ? floatval($value) : false;
+                }
             ],
             "quantity" => [
                 // The minimum quantity should be at least 10
@@ -143,7 +155,8 @@ class ViewController
                 // If the data is not OK, we return false, otherwise we return the data
                 "filter" => FILTER_CALLBACK,
                 "options" => function ($value) {
-                    return (is_numeric($value) && $value >= 0) ? floatval($value) : false; }
+                    return (is_numeric($value) && $value >= 0) ? floatval($value) : false;
+                }
             ],
             "quantity" => [
                 // The minimum quantity should be at least 10

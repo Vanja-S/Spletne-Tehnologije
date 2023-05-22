@@ -11,7 +11,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
         crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="<?= CSS_URL ?>loginpage.css">
+    <link rel="stylesheet" href="<?= CSS_URL ?>landingpage.css">
 </head>
 
 <body>
@@ -36,7 +36,7 @@
                     </li>
                 </ul>
                 <ul class="navbar-nav ms-auto d-flex">
-                    <a class="nav-link" aria-current="page" href="#" style="margin-right: 1em;">Login</a>
+                    <a class="nav-link" aria-current="page" href="login" style="margin-right: 1em;">Login</a>
                 </ul>
             </div>
         </div>
@@ -167,8 +167,8 @@
         </section>
 
         <div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.05);">
-            © 2021 Copyright:
-            <a class="text-reset fw-bold" href="https://mdbootstrap.com/">MDBootstrap.com</a>
+            © 2023 Copyright:
+            <a class="text-reset fw-bold" href="#!">BankOfSlovenia.com</a>
         </div>
     </footer>
 </body>

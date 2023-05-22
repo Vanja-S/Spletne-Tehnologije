@@ -13,6 +13,12 @@ $urls = [
     "welcome" => function () {
         ViewController::index();
     },
+    "login" => function () {
+        ViewController::loginPage();
+    },
+    "signup" => function () {
+        ViewController::signupPage();
+    },
     "" => function () {
         ViewHelper::redirect(BASE_URL . "welcome");
     },
@@ -20,11 +26,11 @@ $urls = [
 
 try {
     if (isset($urls[$path])) {
-       $urls[$path]();
+        $urls[$path]();
     } else {
         echo "No controller for '$path'";
     }
 } catch (Exception $e) {
     echo "An error occurred: <pre>$e</pre>";
     ViewHelper::error404();
-} 
+}
