@@ -8,10 +8,9 @@
 
 3. Spletne dražbe in licitiranje: Spletne aplikacije v realnem času so primerne za spletne dražbe in platforme za licitiranje. Uporabniki lahko oddajajo ponudbe, prejemajo takojšnje posodobitve o trenutni najvišji ponudbi in sodelujejo v dinamičnem postopku. Posodobitve v realnem času zagotavljajo, da imajo udeleženci najnovejše informacije in se lahko hitro odzovejo na spreminjajoče se pogoje dražbe.
 
-## Find a use case where a AJAX polling is a better solution than web-sockets:
+## Find a use case where a AJAX polling is a better solution than web-sockets
 
 Eden od primerov uporabe, kjer je lahko poizvedovanje AJAX boljša rešitev, kot WebSockets, je uporaba v starejših sistemih ali okoljih, ki ne podpirajo vtičnikov WebSockets.
-
 
 ## Would it be possible to implement server-sent events in your single-threaded web server from the 2nd homework assignment? Why?
 
