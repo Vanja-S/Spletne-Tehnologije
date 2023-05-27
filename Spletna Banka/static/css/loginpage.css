@@ -26,6 +26,11 @@ body {
     color: rgb(109, 108, 108);
 }
 
+.error-message {
+    color: red;
+    font-size: 14px;
+}
+
 @media (max-width: 450px) {
     .h-custom {
         height: 100%;

@@ -1,4 +1,4 @@
-drop database is exists bank;
+drop database if exists bank;
 create database bank;
 use bank;
 
@@ -21,23 +21,28 @@ CREATE TABLE IF NOT EXISTS `address`  (
 );
 
 -- Create the user table
-CREATE TABLE IF NOT EXISTS 'user' (
-  `id` INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+CREATE TABLE IF NOT EXISTS `user` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
   `name` VARCHAR(255) NOT NULL,
   `surname` VARCHAR(255) NOT NULL,
   `email` VARCHAR(255) NOT NULL,
-  `phone_number` VARCHAR(20) NOT NULL,
-  `address_postcode` CHAR(4) NOT NULL,
-  `address_city` VARCHAR(255) NOT NULL,
+  `phone_number` VARCHAR(20),
+  `address_postcode` CHAR(4),
+  `address_city` VARCHAR(255),
   `password_hash` VARCHAR(255) NOT NULL,
   FOREIGN KEY (`address_postcode`, `address_city`) REFERENCES address(`postcode`, `city`)
 );
 
 ALTER TABLE user AUTO_INCREMENT = 1000;
 
-CREATE TABLE IF NOT EXISTS 'account' (
-
+CREATE TABLE IF NOT EXISTS `account` (
+  `id` INT NOT NULL,
+  `name` VARCHAR(255) NOT NULL,
+  `assets` BIGINT NOT NULL,
+  PRIMARY KEY (`id`, `name`),
+  FOREIGN KEY (`id`, `name`) REFERENCES `user`(`id`, `name`)
 );
+
 
 CREATE TABLE IF NOT EXISTS 'subaccount' (
 

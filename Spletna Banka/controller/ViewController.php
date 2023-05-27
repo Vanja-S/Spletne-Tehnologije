@@ -10,14 +10,23 @@ class ViewController
         ViewHelper::render("view/landing-page.php");
     }
 
-    public static function loginPage()
+    public static function loginPage($data = [], $errors = [])
     {
-        ViewHelper::render("view/login-page.php");
+        $vars = ["data" => $data, "errors" => $errors];
+        ViewHelper::render("view/login-page.php", $vars);
     }
 
-    public static function signupPage()
+    public static function signupPage($data = [], $errors = [])
     {
-        ViewHelper::render("view/signup-page.php");
+        $vars = ["data" => $data, "errors" => $errors];
+        ViewHelper::render("view/signup-page.php", $vars);
+    }
+
+    public static function homePage($data = [], $errors = [])
+    {
+        var_dump($data);
+        $vars = ["data" => $data, "errors" => $errors];
+        ViewHelper::render("view/home.php", $vars);
     }
 
 
@@ -34,90 +43,62 @@ class ViewController
         ViewHelper::render("view/book-search.php", ["hits" => $hits, "query" => $query]);
     }
 
-    // Function can be called without providing arguments. In such case,
-    // $data and $errors paramateres are initialized as empty arrays
-    public static function showAddForm($data = [], $errors = [])
-    {
-        // If $data is an empty array, let's set some default values
-        if (empty($data)) {
-            $data = [
-                "author" => "",
-                "title" => "",
-                "description" => "",
-                "price" => 0,
-                "year" => date("Y"),
-                "quantity" => 10
-            ];
-        }
+    // public static function add()
+    // {
+    //     $rules = [
+    //         "author" => [
+    //             // Only letters, dots, spaces and dashes are allowed
+    //             "filter" => FILTER_VALIDATE_REGEXP,
+    //             "options" => ["regexp" => "/^[ a-zA-ZšđčćžŠĐČĆŽ\.\-]+$/"]
+    //         ],
+    //         // we convert HTML special characters
+    //         "title" => FILTER_SANITIZE_SPECIAL_CHARS,
+    //         "description" => FILTER_SANITIZE_SPECIAL_CHARS,
+    //         "year" => [
+    //             // The year can only be between 1500 and 2020
+    //             "filter" => FILTER_VALIDATE_INT,
+    //             "options" => ["min_range" => 1500, "max_range" => 2020]
+    //         ],
+    //         "price" => [
+    //             // We provide a custom function that verifies the data. 
+    //             // If the data is not OK, we return false, otherwise we return the data
+    //             "filter" => FILTER_CALLBACK,
+    //             "options" => function ($value) {
+    //                 return (is_numeric($value) && $value >= 0) ? floatval($value) : false;
+    //             }
+    //         ],
+    //         "quantity" => [
+    //             // The minimum quantity should be at least 10
+    //             "filter" => FILTER_VALIDATE_INT,
+    //             "options" => ["min_range" => 10]
+    //         ]
+    //     ];
+    //     // Apply filter to all POST variables; from here onwards we never
+    //     // access $_POST directly, but use the $data array
+    //     $data = filter_input_array(INPUT_POST, $rules);
 
-        // If $errors array is empty, let's make it contain the same keys as
-        // $data array, but with empty values
-        if (empty($errors)) {
-            foreach ($data as $key => $value) {
-                $errors[$key] = "";
-            }
-        }
+    //     $errors["author"] = $data["author"] === false ? "Provide the name of the author: only letters, dots, dashes and spaces are allowed." : "";
+    //     $errors["title"] = empty($data["title"]) ? "Provide the book title." : "";
+    //     $errors["year"] = $data["year"] === false ? "Year should be between 1500 and 2020." : "";
+    //     $errors["price"] = $data["price"] === false ? "Price should be non-negative." : "";
+    //     $errors["quantity"] = $data["quantity"] === false ? "Quantity should be at least 10." : "";
 
-        $vars = ["book" => $data, "errors" => $errors];
-        ViewHelper::render("view/book-add.php", $vars);
-    }
+    //     // Is there an error?
+    //     $isDataValid = true;
+    //     foreach ($errors as $error) {
+    //         $isDataValid = $isDataValid && empty($error);
+    //     }
 
-    public static function add()
-    {
-        $rules = [
-            "author" => [
-                // Only letters, dots, spaces and dashes are allowed
-                "filter" => FILTER_VALIDATE_REGEXP,
-                "options" => ["regexp" => "/^[ a-zA-ZšđčćžŠĐČĆŽ\.\-]+$/"]
-            ],
-            // we convert HTML special characters
-            "title" => FILTER_SANITIZE_SPECIAL_CHARS,
-            "description" => FILTER_SANITIZE_SPECIAL_CHARS,
-            "year" => [
-                // The year can only be between 1500 and 2020
-                "filter" => FILTER_VALIDATE_INT,
-                "options" => ["min_range" => 1500, "max_range" => 2020]
-            ],
-            "price" => [
-                // We provide a custom function that verifies the data. 
-                // If the data is not OK, we return false, otherwise we return the data
-                "filter" => FILTER_CALLBACK,
-                "options" => function ($value) {
-                    return (is_numeric($value) && $value >= 0) ? floatval($value) : false;
-                }
-            ],
-            "quantity" => [
-                // The minimum quantity should be at least 10
-                "filter" => FILTER_VALIDATE_INT,
-                "options" => ["min_range" => 10]
-            ]
-        ];
-        // Apply filter to all POST variables; from here onwards we never
-        // access $_POST directly, but use the $data array
-        $data = filter_input_array(INPUT_POST, $rules);
-
-        $errors["author"] = $data["author"] === false ? "Provide the name of the author: only letters, dots, dashes and spaces are allowed." : "";
-        $errors["title"] = empty($data["title"]) ? "Provide the book title." : "";
-        $errors["year"] = $data["year"] === false ? "Year should be between 1500 and 2020." : "";
-        $errors["price"] = $data["price"] === false ? "Price should be non-negative." : "";
-        $errors["quantity"] = $data["quantity"] === false ? "Quantity should be at least 10." : "";
-
-        // Is there an error?
-        $isDataValid = true;
-        foreach ($errors as $error) {
-            $isDataValid = $isDataValid && empty($error);
-        }
-
-        if ($isDataValid) {
-            BookDB::insert(
-                $data["author"], $data["title"], $data["description"],
-                $data["price"], $data["year"], $data["quantity"]
-            );
-            ViewHelper::redirect(BASE_URL . "book");
-        } else {
-            self::showAddForm($data, $errors);
-        }
-    }
+    //     if ($isDataValid) {
+    //         BookDB::insert(
+    //             $data["author"], $data["title"], $data["description"],
+    //             $data["price"], $data["year"], $data["quantity"]
+    //         );
+    //         ViewHelper::redirect(BASE_URL . "book");
+    //     } else {
+    //         self::showAddForm($data, $errors);
+    //     }
+    // }
 
     public static function showEditForm($data = [], $errors = [])
     {
