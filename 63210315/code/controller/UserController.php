@@ -145,8 +145,7 @@ class UserController
             $userdata["address_street"] = $data["street"];
             UserDB::updateUser($userdata, $userdata["password_hash"]);
             $user = UserDB::getUser($userdata["email"], null, $userdata["password_hash"]);
-            $exists = UserDB::getAccountBalance($user["id"]);
-            if (is_bool($exists) && $exists == false)
+            if (!UserDB::getAccountBalance($user["id"]))
                 UserDB::createAccount($user["id"]);
             $userdata["balance"] = UserDB::getAccountBalance($user["id"]);
 
@@ -179,14 +178,9 @@ class UserController
         ];
         $recived = filter_input_array(INPUT_POST, $rules);
         $userdata = unserialize($_COOKIE["userdata"]);
-
-        var_dump(UserDB::getAccountBalance($recived["recevier_id"]));
-        $exists = UserDB::getAccountBalance($recived["recevier_id"]);
-        if(is_bool($exists) && $exists == false) {
-            $error["account_error"] = true;
-            setcookie("errors", serialize($error), 0, "/index.php/home/");
+        if(UserDB::getAccountBalance($recived["recevier_id"])) {
+            echo"<script>alert(\"The receiving user does not have an account\")</script>";
             ViewHelper::redirect(BASE_URL . "home/transactions");
-            return;
         }
         UserDB::makeTransfer($recived["recevier_id"], $userdata["id"], $recived["transfer"]);
         ViewHelper::redirect(BASE_URL . "home/transactions");

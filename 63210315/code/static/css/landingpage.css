@@ -1,0 +1,39 @@
+.navbar-brand {
+    margin-right: 2em;
+}
+
+.navbar-nav {
+    gap: 2em;
+}
+
+.background {
+    background-image: url("../images/background.jpg");
+    background-size: cover;
+    margin-right: 0px !important;
+    margin-left: 0px !important;
+    padding-bottom: 4em !important;
+    width: 100vw !important;
+    max-width: none;
+    z-index: -1;
+}
+
+#bos {
+    font-size: 9em;
+    text-align: center;
+}
+
+.content {
+    margin-top: 6em;
+    background-color: white;
+    border-radius: 20px;
+    padding: 20px 20px 20px 20px;
+    font-size: 1.4rem;
+    box-shadow: 0px 3px 15px rgba(0,0,0,0.2);
+}
+
+.card {
+    margin-top: 3em;
+    text-align: center;
+    padding-top: 2em;
+    padding-bottom: 1.5em;
+}

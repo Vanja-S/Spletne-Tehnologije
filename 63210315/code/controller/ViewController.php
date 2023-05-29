@@ -25,9 +25,6 @@ class ViewController
     public static function homePage($data = [], $errors = [])
     {
         $vars = ["data" => $data, "errors" => $errors];
-        $userdata = unserialize($_COOKIE["userdata"]);
-        $userdata["balance"] = UserDB::updateAccountBalance($userdata["id"], 0);
-        setcookie("userdata", serialize($userdata), 0, "/index.php/home/");
         ViewHelper::render("view/home.php", $vars);
     }
 

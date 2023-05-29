@@ -76,10 +76,10 @@ class UserDB
         $query->bindParam(":name", $data["name"]);
         $query->bindParam(":surname", $data["surname"]);
         $query->bindParam(":email", $data["email"]);
-        $query->bindParam(":phone", $data["phone_number"]);
-        $query->bindParam(":postcode", $data["address_postcode"]);
-        $query->bindParam(":city", $data["address_city"]);
-        $query->bindParam(":street", $data["address_street"]);
+        $query->bindParam(":phone", $data["phone"]);
+        $query->bindParam(":postcode", $data["postcode"]);
+        $query->bindParam(":city", $data["city"]);
+        $query->bindParam(":street", $data["street"]);
         $query->bindParam(":password_hash", $password);
         $query->execute();
     }

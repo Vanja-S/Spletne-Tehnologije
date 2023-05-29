@@ -28,11 +28,9 @@ $urls = [
     },
     "home/transactions" => function () {
         if (isset($_COOKIE["userdata"])) {
-            if(isset($_COOKIE["errors"]))
-                $errors = unserialize($_COOKIE["errors"]);
             $data = unserialize($_COOKIE["userdata"]);
             $data["subpage"] = "transactions";
-            ViewController::homePage($data, $errors);
+            ViewController::homePage($data);
         } else
             ViewHelper::redirect(BASE_URL . "login");
     },

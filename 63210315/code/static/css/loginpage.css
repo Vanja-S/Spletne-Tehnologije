@@ -1,0 +1,38 @@
+body {
+    background-color: #e3f2fd;
+}
+
+.divider:after,
+.divider:before {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: #eee;
+}
+
+.h-custom {
+    height: calc(100% - 70px);
+}
+
+.lead {
+    font-size: 2.7em;
+    font-weight: 500;
+    margin-bottom: 2em !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+.form-label {
+    color: rgb(109, 108, 108);
+}
+
+.error-message {
+    color: red;
+    font-size: 14px;
+}
+
+@media (max-width: 450px) {
+    .h-custom {
+        height: 100%;
+    }
+}
